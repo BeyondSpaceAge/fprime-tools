@@ -78,12 +78,11 @@ def validate(parsed, unknown):
             match.group(1): match.group(2)
             for match in [CMAKE_REG.match(arg) for arg in unknown]
         }
-        cmake_args.update(d_args)
+        cmake_args |= d_args
         unknown = [arg for arg in unknown if not CMAKE_REG.match(arg)]
-    # Build type only for generate, jobs only for non-generate
     elif parsed.command in Target.get_all_targets():
         parsed.settings = None  # Force to load from cache if possible
-        make_args.update({"--jobs": (1 if parsed.jobs <= 0 else parsed.jobs)})
+        make_args["--jobs"] = 1 if parsed.jobs <= 0 else parsed.jobs
     # Check if any arguments are still unknown
     if unknown:
         runnable = f"{os.path.basename(sys.argv[0])} {parsed.command}"
@@ -160,10 +159,10 @@ def parse_args(args):
         subparsers, common_parser, HelpText
     )
     fpp_runners, fpp_parsers = add_fpp_parsers(subparsers, common_parser)
-    parsers.update(fbuild_parsers)
+    parsers |= fbuild_parsers
     parsers.update(fpp_parsers)
-    runners.update(fbuild_runners)
-    runners.update(fpp_runners)
+    runners |= fbuild_runners
+    runners |= fpp_runners
     runners.update(add_special_parsers(subparsers, common_parser, HelpText))
 
     # Parse and prepare to run
