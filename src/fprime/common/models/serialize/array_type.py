@@ -90,7 +90,7 @@ class ArrayType(DictionaryType):
         """
         JSONable type
         """
-        members = {
+        return {
             "name": self.__class__.__name__,
             "type": self.__class__.__name__,
             "size": self.LENGTH,
@@ -99,7 +99,6 @@ class ArrayType(DictionaryType):
             if self._val is None
             else [member.to_jsonable() for member in self._val],
         }
-        return members
 
     def serialize(self):
         """Serialize the array by serializing the elements one by one"""
@@ -110,7 +109,7 @@ class ArrayType(DictionaryType):
     def deserialize(self, data, offset):
         """Deserialize the members of the array"""
         values = []
-        for i in range(self.LENGTH):
+        for _ in range(self.LENGTH):
             item = self.MEMBER_TYPE()
             item.deserialize(data, offset)
             offset += item.getSize()
@@ -119,4 +118,4 @@ class ArrayType(DictionaryType):
 
     def getSize(self):
         """Return the size of the array"""
-        return sum([item.getSize() for item in self._val])
+        return sum(item.getSize() for item in self._val)

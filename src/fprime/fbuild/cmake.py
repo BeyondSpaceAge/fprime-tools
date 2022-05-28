@@ -108,8 +108,11 @@ class CMakeHandler:
             cmake_target = (
                 module
                 if target == ""
-                else (f"{module}_{target}".lstrip("_") if not top_target else target)
+                else target
+                if top_target
+                else f"{module}_{target}".lstrip("_")
             )
+
         run_args = ["--build", build_dir]
         environment = {} if environment is None else copy.copy(environment)
         if self.verbose:
@@ -333,12 +336,11 @@ class CMakeHandler:
             ]
 
         prefix = self.get_cmake_module(path, build_dir)
-        contextual_make_targets = [
+        return [
             make.replace(prefix, "").strip("_")
             for make in self.cached_help_targets
             if make.startswith(prefix)
         ]
-        return contextual_make_targets
 
     @staticmethod
     def purge(build_dir):
@@ -556,7 +558,7 @@ class CMakeHandler:
                 appendable.append(line)
                 # Streams are EOF when the line returned is empty. Once this occurs, we are responsible for closing the
                 # stream and thus closing the select loop. Empty strings need not be printed.
-                if line == "":
+                if not line:
                     key.fileobj.close()
                     continue
                 # Forwards output to screen.  Assuming a PTY is used, then coloring highlights should be automatically
