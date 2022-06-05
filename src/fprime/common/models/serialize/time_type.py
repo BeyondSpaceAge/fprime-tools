@@ -283,10 +283,7 @@ class TimeType(type_base.BaseType):
         Returns:
             A human readable string representing the time type object
         """
-        dt = self.get_datetime(time_zone)
-
-        # If we could convert to a valid datetime, use that, otherwise, format
-        if dt:
+        if dt := self.get_datetime(time_zone):
             return dt.strftime("%Y-%m-%d %H:%M:%S%z")
         else:
             return "%s: %d.%06ds, context=%d" % (

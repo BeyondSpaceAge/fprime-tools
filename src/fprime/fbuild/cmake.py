@@ -108,8 +108,11 @@ class CMakeHandler:
             cmake_target = (
                 module
                 if target == ""
-                else (f"{module}_{target}".lstrip("_") if not top_target else target)
+                else target
+                if top_target
+                else f"{module}_{target}".lstrip("_")
             )
+
         run_args = ["--build", build_dir]
         environment = {} if environment is None else copy.copy(environment)
         if self.verbose:
@@ -333,12 +336,11 @@ class CMakeHandler:
             ]
 
         prefix = self.get_cmake_module(path, build_dir)
-        contextual_make_targets = [
+        return [
             make.replace(prefix, "").strip("_")
             for make in self.cached_help_targets
             if make.startswith(prefix)
         ]
-        return contextual_make_targets
 
     @staticmethod
     def purge(build_dir):
