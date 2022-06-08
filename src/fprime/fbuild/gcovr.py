@@ -257,7 +257,7 @@ class Gcovr(ExecutableAction):
             "gcovr",
             "-r",
             str(project_root),
-            builder.build_dir / build_offset,  # For efficiency in searching on modules
+            builder.build_dir / build_offset,
             "--filter",
             f"{filter_path}/*",
             "--filter",
@@ -266,15 +266,18 @@ class Gcovr(ExecutableAction):
             str(builder.build_dir),
             "--exclude",
             str(
-                builder.get_settings("framework_path", builder.build_dir.parent.parent)
+                builder.get_settings(
+                    "framework_path", builder.build_dir.parent.parent
+                )
                 / "Autocoders"
             ),
             "--print-summary",
             "--txt",
             f"{coverage_output_dir}/summary.txt",
-            f"--html-details",
+            "--html-details",
             f"{coverage_output_dir}/coverage{'-all' if self.scope == TargetScope.GLOBAL else ''}.html",
         ]
+
         cli_args.extend(args[1])
 
         if builder.cmake.verbose:
