@@ -51,8 +51,8 @@ def print_info(
             else "N/A",
             build_info.get("build_dir", "Unknown"),
         )
-        local_generic_targets.update(local_targets)
-        global_generic_targets.update(global_targets)
+        local_generic_targets |= local_targets
+        global_generic_targets |= global_targets
         build_infos[build.build_type] = build_artifacts
 
     # Print out directory and deployment target sections
