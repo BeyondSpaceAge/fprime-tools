@@ -250,11 +250,7 @@ class TimeType(type_base.BaseType):
 
         # Compare usecs
         usec_cmp = cmp(t1.useconds, t2.useconds)
-        if usec_cmp != 0:
-            return usec_cmp
-
-        # Compare contexts
-        return cmp(t1.timeContext, t2.timeContext)
+        return usec_cmp if usec_cmp != 0 else cmp(t1.timeContext, t2.timeContext)
 
     def __str__(self):
         """
@@ -283,10 +279,7 @@ class TimeType(type_base.BaseType):
         Returns:
             A human readable string representing the time type object
         """
-        dt = self.get_datetime(time_zone)
-
-        # If we could convert to a valid datetime, use that, otherwise, format
-        if dt:
+        if dt := self.get_datetime(time_zone):
             return dt.strftime("%Y-%m-%d %H:%M:%S%z")
         return "%s: %d.%06ds, context=%d" % (
             TimeBase(self.__timeBase.val).name,
