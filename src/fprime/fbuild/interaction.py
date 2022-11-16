@@ -187,7 +187,7 @@ def add_port_to_cmake(list_file: Path, comp_path: Path):
     with open(list_file, "r") as file_handle:
         lines = file_handle.readlines()
     index = 0
-    while re.search("set\(\s*SOURCE_FILES", lines[index]) is None:
+    while re.search(r"set\(\s*SOURCE_FILES", lines[index]) is None:
         index += 1
     index += 1
     while "CMAKE_CURRENT_LIST_DIR" in lines[index]:
